@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+    <form method="post">
+        {{ form.csrf_token }}
+        <div class="layui-form-item">
+            {{ form.username.label(class="layui-form-label") }}
+            <div class="layui-input-block">
+                {{ form.username(class="layui-input") }}
+            </div>
+            {% for message in form.username.errors %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <div class="layui-form-item">
+            {{ form.password.label(class="layui-form-label") }}
+            <div class="layui-input-block">
+                {{ form.password(class="layui-input") }}
+            </div>
+            {% for message in form.password.errors %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <div class="layui-form-item">
+                {{ form.remember.label }}
+            <div class="layui-input-block">
+                {{ form.remember }}
+            </div>
+        </div>
+        {{ form.submit(class="layui-btn layui-btn-fluid") }}
+    </form>
+{% endblock body %}

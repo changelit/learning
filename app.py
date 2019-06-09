@@ -1,4 +1,5 @@
-from flask import Flask, render_template, flash, url_for
+from flask import Flask, render_template, flash, url_for, request, redirect
+from main import forms
 
 app = Flask(__name__)
 
@@ -17,6 +18,16 @@ def page_not_found(e):
 def just_flash():
     flash('Current Version is too old')
     return '', 302, {'Location': '/'}
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        flash('Welcome you %s' % username)
+        return redirect(url_for('just_flash'))
+    return render_template('login.html', form=form)
 
 
 app.jinja_env.lstrip_blocks = True
