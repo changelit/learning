@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block body %}
+    <form id="frm_info" class="layui-form" style="padding:10px;" action="http://test.conen.cn/scanPay/scanPaying.jsp" method="post">
+		<div class="layui-form-item">
+		    <label class="layui-form-label">支付类型：</label>
+		    <div class="layui-input-block">
+		    	<select name="payCode">
+                    <option value="T1_WX_SCAN">微信T1扫码</option>
+                    <option value="D0_WX_SCAN">微信D0扫码</option>
+                 </select>
+                 <div class="layui-unselect layui-form-select">
+                 	<div class="layui-select-title">
+                 		<input type="text" placeholder="请选择" value="微信T1扫码" readonly="" class="layui-input layui-unselect">
+                 		<i class="layui-edge"></i>
+                 	</div>
+                 	<dl class="layui-anim layui-anim-upbit">
+                 		<dd lay-value="T1_WX_SCAN" class="layui-this">微信T1扫码</dd>
+                 		<dd lay-value="D0_WX_SCAN" class="">微信D0扫码</dd>
+                 	</dl>
+		    	</div>
+			</div>
+		</div>
+    	<div class="layui-form-item">
+		    <label class="layui-form-label">商品名称：</label>
+		    <div class="layui-input-block">
+		    	<input type="text" class="layui-input" name="product">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">订单金额(元)：</label>
+		    <div class="layui-input-block">
+		    	<input type="text" class="layui-input" name="amount">
+		    </div>
+		</div>
+    	<button class="layui-btn layui-btn-fluid">用户下单</button>
+    </form>
+{% endblock body %}
