@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <div class="layui-form-item">
             {{ form.username.label(class="layui-form-label") }}
@@ -17,6 +17,15 @@
                 {{ form.password(class="layui-input") }}
             </div>
             {% for message in form.password.errors %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <div class="layui-form-item">
+            {{ form.photo.label(class="layui-form-label") }}
+            <div class="layui-input-block">
+                {{ form.photo(class="layui-input") }}
+            </div>
+            {% for message in form.photo.errors %}
                 {{ message }}
             {% endfor %}
         </div>
