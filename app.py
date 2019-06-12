@@ -1,51 +1,45 @@
-from flask import Flask, render_template, flash, url_for, request, redirect
-from main import forms
-import os
-import uuid
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:88888888@127.0.0.1/test'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 用于追踪对象修改，可以关闭
+db = SQLAlchemy(app)
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    from main.dao.contacts import Contacts
+    # 查询一条记录
+    get_row = Contacts.query.first()
+    print(get_row.name)
 
+    # 删除一条记录
+    get_id = Contacts.query.get(14)
+    if get_id:
+        db.session.delete(get_id)
+        db.session.commit()
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('errors/404.html', e=e), 404
+    # 插入一条记录
+    insert_row = Contacts(id='14', name='xiangsuwei', tel='18822222222')
+    db.session.add(insert_row)
+    db.session.commit()
 
+    # 更新一条记录
+    update_name = Contacts.query.get(14)
+    update_name.name = 'YangZhi'
+    db.session.commit()
 
-@app.route('/flash')
-def just_flash():
-    flash('Current Version is too old')
-    return '', 302, {'Location': '/'}
+    get_specific_rows = Contacts.query.filter(Contacts.name.like('c%')).all()
+    array = ''
+    for row in get_specific_rows:
+        id = row.id
+        name = row.name
+        tel = row.tel
+        array += str(id) + name + tel + '\n'
+    return array, 200
 
-
-def random_filename(filename):
-    ext = os.path.splitext(filename)[1]
-    new_filename = uuid.uuid4().hex + ext
-    return new_filename
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = forms.LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        f = form.photo.data
-        filename = random_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-        flash('Upload %s succesfully ' % filename)
-        flash('Welcome you %s' % username)
-        return redirect(url_for('just_flash'))
-    return render_template('login.html', form=form)
-
-
-app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'uploads')
-app.jinja_env.lstrip_blocks = True
-app.jinja_env.trim_blocks = True
-app.secret_key = '123456'
 
 if __name__ == '__main__':
     app.run()
